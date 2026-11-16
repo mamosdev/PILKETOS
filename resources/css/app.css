@@ -1,0 +1,43 @@
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/plus-jakarta-sans";
+
+@theme {
+    --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+    --font-heading: "Plus Jakarta Sans Variable", ui-sans-serif, sans-serif;
+    --color-civic-primary: #1E40AF;
+    --color-civic-hover: #1D4ED8;
+    --color-civic-accent: #F59E0B;
+    --color-civic-surface: #F8FAFC;
+}
+
+@layer components {
+    .mesh-bg {
+        background-color: #F1F5F9;
+        background-image:
+            radial-gradient(at 8% 12%, rgba(59, 130, 246, .22) 0px, transparent 52%),
+            radial-gradient(at 88% 18%, rgba(99, 102, 241, .20) 0px, transparent 48%),
+            radial-gradient(at 76% 85%, rgba(245, 158, 11, .14) 0px, transparent 50%),
+            radial-gradient(at 15% 82%, rgba(14, 165, 233, .18) 0px, transparent 50%);
+        background-attachment: fixed;
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, .76);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, .85);
+        box-shadow: 0 8px 32px -4px rgba(15, 23, 42, .06), 0 2px 6px -1px rgba(15, 23, 42, .04);
+    }
+
+    .glass-card-strong {
+        background: rgba(255, 255, 255, .88);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, .95);
+        box-shadow: 0 12px 36px -6px rgba(15, 23, 42, .09);
+    }
+
+    .glass-nav {
+        background: rgba(255, 255, 255, .82);
+        backdrop-filter: blur(18px);
+        border-bottom: 1px solid rgba(226, 232, 240, .85);
+    }
+}
