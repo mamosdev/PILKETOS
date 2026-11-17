@@ -27,6 +27,11 @@
     </header>
 
     <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+        @if (session('status'))
+            <div class="mb-6 glass-card rounded-2xl px-5 py-3 text-sm font-medium text-slate-900 border border-amber-200" role="status">
+                {{ session('status') }}
+            </div>
+        @endif
         {{ $slot }}
     </main>
 

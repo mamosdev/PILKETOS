@@ -2,14 +2,28 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+// use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Hash;
 
-class Participation extends Model
+
+class Participation extends Authenticatable
 {
     protected $fillable = ['election_id', 'voter_id', 'token_hash', 'token_issued_at', 'has_voted', 'voted_at'];
     protected $hidden = ['token_hash'];
+
+    public function getAuthPassword()
+    {
+        return $this->token_hash;
+    }
+
+    // Tanpa fitur "ingat saya": pemilih memakai perangkat bersama
+    public function getRememberTokenName(): string
+    {
+        return '';
+    }
 
     protected function casts(): array
     {
@@ -24,4 +38,6 @@ class Participation extends Model
         return filled($this->token_hash)
             && Hash::check(strtoupper(trim($token)), $this->token_hash);
     }
+
+    
 }

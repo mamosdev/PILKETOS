@@ -2,14 +2,18 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Cache;
+
 use App\Models\Election;
 use App\Enums\ElectionStatus;
 use App\Livewire\ElectionPortal;
 
+use App\Http\Middleware\EnsureVoterCanVote;
+use App\Livewire\VoterLogin;
+use App\Livewire\VotingBooth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-// Route::get('/', function () {
-//     return view('home');
-// });
+
 Route::get('/cetak-token/{election}', function (Election $election) {
     abort_unless(auth()->check(), 403);
 
@@ -31,8 +35,19 @@ Route::get('/', function () {
     return view('home', compact('elections'));
 })->name('home');
 
+// Pemilihan portal
 Route::get('/pemilihan/{election:slug}', ElectionPortal::class)->name('portal');
 
-// Sementara: halaman ini dibuat sungguhan di Segmen 5
-Route::get('/pemilihan/{election:slug}/masuk', fn (Election $election) => 'Halaman login pemilih (Segmen 5)')
-    ->name('voter.login');
+// Pemilih login & voting
+Route::get('/pemilihan/{election:slug}/masuk', VoterLogin::class)->name('voter.login');
+
+Route::get('/pemilihan/{election:slug}/bilik', VotingBooth::class)
+    ->middleware(['auth:voter', EnsureVoterCanVote::class])
+    ->name('booth');
+
+Route::post('/pemilihan/{election:slug}/keluar', function (Request $request, Election $election) {
+    Auth::guard('voter')->logout();
+    $request->session()->regenerate();
+
+    return redirect()->route('portal', $election);
+})->name('voter.logout');
