@@ -17,4 +17,25 @@ class Candidate extends Model
 
     public function election(): BelongsTo { return $this->belongsTo(Election::class); }
     public function ballots(): HasMany { return $this->hasMany(Ballot::class); }
+
+    public function getDisplayNameAttribute(): string
+    {
+        return $this->running_mate ? "{$this->name} & {$this->running_mate}" : $this->name;
+    }
+
+    public function getPhotoUrlAttribute(): ?string
+    {
+        return $this->photo_path ? Storage::disk('public')->url($this->photo_path) : null;
+    }
+
+    public function getAccentGradientAttribute(): string
+    {
+        $gradients = [
+            'from-blue-800 to-indigo-700',
+            'from-indigo-700 to-sky-700',
+            'from-slate-800 to-blue-900',
+        ];
+
+        return $gradients[max(0, $this->sort_order - 1) % count($gradients)];
+    }
 }

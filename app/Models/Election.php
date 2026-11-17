@@ -35,4 +35,14 @@ class Election extends Model
             && $this->ends_at
             && now()->between($this->starts_at, $this->ends_at);
     }
+    public function phase(): string
+    {
+        if ($this->status === ElectionStatus::Closed
+            || ($this->ends_at && now()->gt($this->ends_at))) {
+            return 'closed';
+        }
+
+        return $this->isOpen() ? 'open' : 'upcoming';
+    }
+    
 }

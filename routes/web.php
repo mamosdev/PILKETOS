@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Election;
 use Illuminate\Support\Facades\Cache;
 
+
 Route::get('/', function () {
     return view('home');
 });
