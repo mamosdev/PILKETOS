@@ -12,7 +12,7 @@ class Election extends Model
     /** @use HasFactory<\Database\Factories\ElectionFactory> */
     use HasFactory;
 
-    protected $fillable = ['title', 'slug', 'description', 'organization', 'status', 'starts_at', 'ends_at', 'allow_blank_vote'];
+    protected $fillable = ['title', 'slug', 'description', 'organization', 'status', 'starts_at', 'ends_at', 'allow_blank_vote', 'show_live_results'];
 
     protected function casts(): array
     {
@@ -21,12 +21,14 @@ class Election extends Model
             'starts_at' => 'datetime',
             'ends_at' => 'datetime',
             'allow_blank_vote' => 'boolean',
+            'show_live_results' => 'boolean',
         ];
     }
 
     public function candidates(): HasMany { return $this->hasMany(Candidate::class)->orderBy('sort_order'); }
     public function participations(): HasMany { return $this->hasMany(Participation::class); }
     public function ballots(): HasMany { return $this->hasMany(Ballot::class); }
+    
 
     public function isOpen(): bool
     {
@@ -43,6 +45,10 @@ class Election extends Model
         }
 
         return $this->isOpen() ? 'open' : 'upcoming';
+    }
+    public function resultsVisible(): bool
+    {
+        return $this->phase() === 'closed' || $this->show_live_results;
     }
     
 }

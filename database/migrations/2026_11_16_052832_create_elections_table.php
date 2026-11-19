@@ -12,17 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('elections', function (Blueprint $table) {
-    $table->id();
-    $table->string('title');
-    $table->string('slug')->unique();
-    $table->text('description')->nullable();
-    $table->string('organization')->nullable();      // mis. "SMA Negeri 1"
-    $table->string('status')->default('draft');     // draft | active | closed
-    $table->dateTime('starts_at')->nullable();
-    $table->dateTime('ends_at')->nullable();
-    $table->boolean('allow_blank_vote')->default(false);
-    $table->timestamps();
-});
+            $table->id();
+            $table->string('title');
+            $table->string('slug')->unique();
+            $table->text('description')->nullable();
+            $table->string('organization')->nullable();      // mis. "SMA Negeri 1"
+            $table->string('status')->default('draft');     // draft | active | closed
+            $table->dateTime('starts_at')->nullable();
+            $table->dateTime('ends_at')->nullable();
+            $table->boolean('allow_blank_vote')->default(false);
+            $table->timestamps();
+        });
     }
 
     /**

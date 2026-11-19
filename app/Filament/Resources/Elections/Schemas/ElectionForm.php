@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Elections\Schemas;
 
+use App\Models\Election;
 use App\Enums\ElectionStatus;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
@@ -17,6 +18,7 @@ class ElectionForm
 {
     public static function configure(Schema $schema): Schema
     {
+        $locked = fn (?Election $record) => $record?->phase() === 'closed';
         return $schema->components([
             Section::make('Informasi pemilihan')
                 ->columns(2)
@@ -41,7 +43,9 @@ class ElectionForm
                     Select::make('status')
                         ->options(ElectionStatus::class)
                         ->default(ElectionStatus::Draft)
-                        ->required(),
+                        ->required()
+                        ->disabled($locked)
+                        ->helperText('Pemilihan yang sudah ditutup tidak dapat dibuka kembali.'),
                     Textarea::make('description')
                         ->label('Deskripsi')
                         ->columnSpanFull(),
@@ -50,9 +54,14 @@ class ElectionForm
             Section::make('Jadwal & aturan')
                 ->columns(2)
                 ->schema([
-                    DateTimePicker::make('starts_at')->label('Mulai')->seconds(false)->required(),
-                    DateTimePicker::make('ends_at')->label('Selesai')->seconds(false)->required()->after('starts_at'),
-                    Toggle::make('allow_blank_vote')->label('Izinkan suara kosong'),
+                    DateTimePicker::make('starts_at')->label('Mulai')->seconds(false)->required()->disabled($locked),
+                    DateTimePicker::make('ends_at')->label('Selesai')->seconds(false)->required()->after('starts_at')->disabled($locked),
+                    Toggle::make('allow_blank_vote')->label('Izinkan suara kosong')->disabled($locked),
+                    Toggle::make('show_live_results')
+                        ->label('Tampilkan hasil sementara selama pemungutan suara')
+                        ->helperText('Tidak disarankan. Jika aktif, panitia yang memantau dashboard sambil melihat log pemilih bisa menebak pilihan seseorang dari perubahan angka. Biarkan mati agar hasil baru terlihat setelah pemilihan ditutup.')
+                        ->disabled($locked)
+                        ->columnSpanFull(),
                 ]),
         ]);
     }
